@@ -32,6 +32,13 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
 - `SceneRendererScriptCompatibility`
 - `SceneRendererPuppetAlpha`
 
+## 双架构 CI 证据
+
+[GitHub Actions run 32630468450](https://github.com/Jason25417/MirageWallpaper/actions/runs/32630468450) 在两个正式 runner 上通过：
+
+- Apple Silicon：`macos-15`，Xcode 16.4（`16F6`），macOS SDK 15.5，Homebrew Clang 22.1.8；5/5 tests passed。
+- Intel：`macos-15-intel`，Xcode 16.4（`16F6`），macOS SDK 15.5，Homebrew Clang 22.1.8；5/5 tests passed。
+
 ## 门禁发现的问题
 
 第一次运行虽然设置了 `DEVELOPER_DIR`，CMake 仍从独立安装的 Command Line Tools 缓存了 macOS 27 SDK framework 路径，导致 Metal header 编译失败。test runner 现已明确传入 `CMAKE_OSX_SYSROOT`，并按 SDK 名称隔离 build tree，避免正式版与 beta SDK 的 CMake cache 互相污染。
@@ -40,8 +47,7 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
 
 ## 未覆盖与后续动作
 
-- Intel 结果等待 GitHub Actions 验证。
-- Apple Silicon CI 结果等待 GitHub Actions 验证。
 - 需要把 release dependencies 固定为可追溯、与最低系统版本一致的构建产物。
+- 仍需在 macOS 14.x 实机或等价环境验证 deployment target；macOS 15 的双架构 CI 不能替代最低版本验证。
 - 需要建立 Swift test target、renderer 构建门禁和 Steam IPC smoke tests。
 - 本次没有修改产品行为、权限、数据格式或发布签名。
